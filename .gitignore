@@ -1,0 +1,4 @@
+/.env
+/alembic/
+/alembic.ini
+/.idea/
