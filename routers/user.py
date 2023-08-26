@@ -12,6 +12,15 @@ router = APIRouter(
 )
 
 
+@router.get('')
+async def get_users(limit: int = 10, offset: int = 0, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        select(UserDB)
+    )
+
+    return result.scalars().all()[offset:][:limit]
+
+
 @router.post('')
 async def create_user(data: UserDTO, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
