@@ -6,10 +6,13 @@ from database import get_db
 from models_db.user import User as UserDB
 from models_dto.user import User as UserDTO
 
-router = APIRouter()
+router = APIRouter(
+    prefix = '/user',
+    tags = ['user']
+)
 
 
-@router.post('/', tags = ['user'])
+@router.post('')
 async def create_user(data: UserDTO, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         insert(UserDB).values(data.model_dump()).returning(UserDB)
@@ -19,7 +22,7 @@ async def create_user(data: UserDTO, db: AsyncSession = Depends(get_db)):
     return result.scalar()
 
 
-@router.get('/{id}', tags = ['user'])
+@router.get('/{id}')
 async def get_user(id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(UserDB).where(UserDB.id == id)
@@ -28,7 +31,7 @@ async def get_user(id: int, db: AsyncSession = Depends(get_db)):
     return result.scalar()
 
 
-@router.put('/{id}', tags = ['user'])
+@router.put('/{id}')
 async def update_user(id: int, data: UserDTO, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         update(UserDB).where(UserDB.id == id).values(data.model_dump()).returning(UserDB)
@@ -38,7 +41,7 @@ async def update_user(id: int, data: UserDTO, db: AsyncSession = Depends(get_db)
     return result.scalar()
 
 
-@router.delete('/{id}', tags = ['user'])
+@router.delete('/{id}')
 async def delete_user(id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         delete(UserDB).where(UserDB.id == id).returning(UserDB)
